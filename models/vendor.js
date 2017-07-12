@@ -7,9 +7,17 @@ const vendorSchema = new mongoose.Schema({
   quantity: Number
 });
 
-const Vendor = mongoose.model('Vendor', vendorSchema);
+const registerSchema = new mongoose.Schema({
+  id: { type: Number, required: true, unique: true },
+  item: String,
+  paid: Number,
+  date: {type: Date, default: Date.now}
+});
 
-module.exports = Vendor;
+const Vendor = mongoose.model('Vendor', vendorSchema);
+const Register = mongoose.model('Register', registerSchema);
+
+module.exports = {Vendor, Register};
 
 // {
 //       "id": 1,

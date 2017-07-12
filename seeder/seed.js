@@ -1,10 +1,9 @@
-const Vendor = require('../models/vendor');
+const Vendor = require('../models/vendor').Vendor;
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
 mongoose.connect('mongodb://localhost:27017/vendor');
 
-var vend = new Vendor({});
 
 // var arr = [{ name: 'Star Wars' }, { name: 'The Empire Strikes Back' }];
 // Movies.insertMany(arr, function(error, docs) {});
