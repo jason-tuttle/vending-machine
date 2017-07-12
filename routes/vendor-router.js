@@ -38,6 +38,7 @@ router.get('/money', function (req, res) {
 });
 
 // POST /api/vendor/items - add a new item not previously existing in the machine
+// TEST PASSED
 router.post('/items', function (req, res) {
   // pull last record, need last.id++
   let lastId = 0;
@@ -48,27 +49,48 @@ router.post('/items', function (req, res) {
       if (err) {
         res.json({'status': 'failed', 'error': err});
       } else {
-        lastId = array.length;
+        console.log(`last id: ${array[array.length-1].id}`)
+        lastId = array[array.length-1].id;
+        const newItem = {
+          id: ++lastId,
+          description: req.body.newDescription,
+          cost: req.body.newCost,
+          quantity: req.body.newQuantity
+        };
+        // do the insert
+        Vendor.create(newItem, function(err, newThing) {
+          if (err) {
+            res.json({'status': 'failed', 'error': err});
+          } else {
+            res.json({'status': 'success', 'data': newThing});
+          }
+        });
       }
     });
-  // do the insert
-  Vendor.create({ // SCHEMA
-    id: ++lastId,
-    description: req.body.newDescription,
-    cost: req.body.newCost,
-    quantity: req.body.newQuantity
-  }, function(err, newThing) {
-    if (err) {
-      res.json({'status': 'failed', 'error': err});
-    } else {
-      res.json({'status': 'success', 'data': newThing});
-    }
-  });
 });
 
 // PUT /api/vendor/items/:itemId - update item quantity, description, and cost
+// TESTS PASSED
 router.put('/items', function (req, res) {
+  const newItem = {
+    description: req.body.newDescription,
+    cost: req.body.newCost,
+    quantity: req.body.newQuantity
+  };
   // Vendor.update({'id': itemId}, { SET PARAMS HERE });
+  // query.findOneAndUpdate(conditions, update, options, callback)
+  Vendor.findOneAndUpdate(
+    {'id': req.params.itemId},
+    newItem,
+    { new: true },
+    function(err, doc) {
+      if (err) {
+        res.json({'status': 'failed', 'error': err})
+      } else {
+        res.json({'status': 'success', 'data': doc})
+      }
+    }
+)
 });
 
 module.exports = router;

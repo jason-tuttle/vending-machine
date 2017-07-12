@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
 // connect to db
-mongoose.connect('mongodb://localhost:27017/vendor');
+mongoose.connect('mongodb://localhost:27017/vendor', {'useMongoClient': true});
 
 app.use('/api/customer', customerRouter);
 app.use('/api/vendor', vendorRouter);
